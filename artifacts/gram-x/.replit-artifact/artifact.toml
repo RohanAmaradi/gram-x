@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Gram_X – Smart Farming Assistant"
+version = "1.0.0"
+id = "artifacts/gram-x"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25961
+
+[services.development]
+run = "pnpm --filter @workspace/gram-x run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/gram-x", "run", "build" ]
+publicDir = "artifacts/gram-x/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25961"
+BASE_PATH = "/"

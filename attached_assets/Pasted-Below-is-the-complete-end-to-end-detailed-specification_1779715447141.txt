@@ -1,0 +1,371 @@
+Below is the **complete, end-to-end detailed specification of your Gram_X app** — including every module, page, feature, Firebase structure, AI behavior, UI design, and system flow. You can directly use this for **hackathon, MSME submission, or full app development**.
+
+---
+
+# 🌾 GRAM_X – COMPLETE APP SPECIFICATION (FULL DETAIL)
+
+## 🎯 VISION
+
+Gram_X is a **smart farming super app** that helps farmers:
+
+* Increase profit 📈
+* Reduce farming cost 📉
+* Access government schemes 🏛
+* Sell crops at better price 💰
+* Learn modern farming 🌱
+* Use AI in local language 🗣
+* Work fully with voice support 🔊
+
+---
+
+# 📱 1. APP STRUCTURE (MAIN NAVIGATION)
+
+## 🧭 Bottom Navigation (5 Tabs Only)
+
+1. 🏠 Home
+2. 💰 Market
+3. 🧰 Tools
+4. 🤖 AI Assistant
+5. 👤 Profile
+
+---
+
+# 🏠 2. HOME DASHBOARD
+
+## UI Layout:
+
+* Simple card grid system
+* Large icons + short labels
+* Voice assistant button floating
+
+## Modules on Home:
+
+* 🌿 Crop Advisor
+* 💰 Mandi Prices
+* 🏛 Government Schemes
+* 🚜 Equipment Rental
+* 🐄 Livestock Manager
+* 💸 Expense Tracker
+* 📅 Crop Calendar
+* 🌦 Weather
+
+## Features:
+
+* Language switcher (top)
+* Voice read button
+* Daily farming tip
+* Notifications panel
+
+---
+
+# 🌿 3. CROP ADVISOR MODULE
+
+## Input:
+
+* Soil type
+* Location
+* Season
+* Water availability
+
+## Output:
+
+* Best crop suggestion
+* Profit estimate
+* Risk level
+* Market demand
+* Crop duration
+
+## AI Features:
+
+* Smart recommendation
+* Voice answer
+* Multilingual output
+
+---
+
+# 💰 4. MANDI PRICE MODULE
+
+## Features:
+
+* Live crop prices
+* Price per KG / Liter
+* Daily update timestamp
+* Nearby mandi list
+
+## Data shown:
+
+* Current price
+* Yesterday price
+* Weekly trend
+
+## UI:
+
+* Crop cards
+* Green/red price indicators
+* Large price text
+
+---
+
+# 🏛 5. GOVERNMENT SCHEMES MODULE
+
+## Features:
+
+* Scheme list by state
+* Eligibility checker
+* Application links
+* Deadline alerts
+
+## Includes:
+
+* PM Kisan
+* Crop Insurance
+* State subsidies
+* Loan programs
+
+---
+
+# 🚜 6. EQUIPMENT RENTAL MODULE
+
+## Features:
+
+* Tractor booking
+* Harvester rental
+* Sprayer booking
+* Water pump rental
+
+## UI:
+
+* Equipment cards
+* Price per hour/day
+* Contact button
+* Availability status
+
+---
+
+# 📅 7. CROP CALENDAR MODULE
+
+## Features:
+
+* Full crop lifecycle plan
+
+### Sections:
+
+* 🌱 Sowing date
+* 🌿 Growth stage
+* 💧 Irrigation schedule
+* 🌾 Harvest time
+
+## Extras:
+
+* Push reminders
+* Voice alerts
+* Calendar view
+
+---
+
+# 🐄 8. LIVESTOCK MANAGEMENT MODULE
+
+## Animals:
+
+* Cow
+* Buffalo
+* Goat
+* Poultry
+
+## Features:
+
+* Feed schedule
+* Vaccination reminders
+* Disease detection tips
+* Milk tracking
+
+---
+
+# 💸 9. EXPENSE TRACKER MODULE
+
+## Input:
+
+* Seed cost
+* Fertilizer cost
+* Labor cost
+* Transport cost
+
+## Output:
+
+* Total investment
+* Profit/loss
+* Crop-wise report
+
+## Extras:
+
+* Graph view
+* PDF export
+* Voice summary
+
+---
+
+# 🌦 10. WEATHER MODULE
+
+## Features:
+
+* 7-day forecast
+* Rain alerts
+* Storm warnings
+* Farming suggestions based on weather
+
+---
+
+# 🤖 11. AI ASSISTANT (GRAM_X BRAIN)
+
+## Capabilities:
+
+* Crop advice
+* Pest control
+* Scheme explanation
+* Market prediction
+* Farming tips
+
+## Rules:
+
+* Always respond
+* Always simple language
+* Always translated
+* Always voice compatible
+
+---
+
+# 🔊 12. VOICE SYSTEM (VERY IMPORTANT)
+
+## Features:
+
+* Read all pages aloud
+* Stop button (instant stop)
+* Language-based voice
+* Mic input support
+
+## Behavior:
+
+* No overlapping voice
+* Instant stop response
+* Works offline fallback
+
+---
+
+# 🌐 13. MULTILINGUAL SYSTEM
+
+## Supported:
+
+* English
+* Telugu
+* Hindi
+* Tamil
+* Kannada
+* Malayalam
+* Marathi
+
+## Rules:
+
+* Full UI translation
+* No English mix after selection
+* Instant switch without restart
+
+---
+
+# ☁ 14. FIREBASE BACKEND
+
+## Authentication:
+
+* Phone OTP login
+* Google login
+
+## Firestore Collections:
+
+* users
+* crops
+* mandi_prices
+* schemes
+* equipment_rentals
+* livestock
+* expenses
+* calendar_data
+* weather_data
+
+---
+
+# 🧠 15. AI INTEGRATION
+
+## APIs:
+
+* Gemini AI
+* Firebase Functions
+* Google Translate API
+* Text-to-Speech API
+* Speech-to-Text API
+
+---
+
+# 🎨 16. UI DESIGN SYSTEM
+
+## Style:
+
+* Clean
+* Minimal
+* Farmer-friendly
+* Big buttons
+* Rounded cards
+
+## Colors:
+
+* Green (#2E7D32)
+* Light green (#A5D6A7)
+* White background
+* Red (loss)
+* Orange (warning)
+
+---
+
+# 📱 17. CORE UX PRINCIPLE
+
+👉 “One screen = One task”
+
+No clutter
+No confusion
+No technical terms
+
+---
+
+# 🔥 18. SMART FEATURES
+
+* Crop disease detection (camera)
+* AI profit prediction
+* Nearby mandi finder (GPS)
+* Subsidy eligibility checker
+* Offline mode support
+* Emergency agriculture help button
+
+---
+
+# 🎯 FINAL OUTCOME
+
+Gram_X becomes a:
+
+✔ AI Farming Assistant
+✔ Government Scheme Guide
+✔ Crop Profit Planner
+✔ Market Price Tracker
+✔ Voice-based Rural App
+✔ Smart Agriculture Ecosystem
+
+---
+
+# 🚀 IF YOU WANT NEXT STEP
+
+I can also build for you:
+✔ Complete Flutter project folder structure
+✔ UI screens (code)
+✔ Firebase setup guide step-by-step
+✔ Figma design (full app prototype)
+✔ PPT for MSME / Hackathon submission
+✔ AI chatbot working code (Gemini integration)
+
+Just tell me 👍

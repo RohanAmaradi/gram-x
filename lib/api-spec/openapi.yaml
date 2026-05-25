@@ -1,22 +1,41 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Gram_X Smart Farming API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: mandi
+    description: Mandi price operations
+  - name: schemes
+    description: Government schemes operations
+  - name: equipment
+    description: Equipment rental operations
+  - name: expenses
+    description: Expense tracker operations
+  - name: livestock
+    description: Livestock management operations
+  - name: marketplace
+    description: Marketplace buy/sell operations
+  - name: ai
+    description: AI assistant operations
+  - name: weather
+    description: Weather operations
+  - name: dashboard
+    description: Dashboard summary operations
+  - name: crop-advisor
+    description: Crop advisor operations
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +43,401 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /mandi-prices:
+    get:
+      operationId: getMandiPrices
+      tags: [mandi]
+      summary: List current mandi prices for all crops
+      responses:
+        "200":
+          description: List of mandi prices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MandiPrice"
+
+  /mandi-prices/{id}:
+    get:
+      operationId: getMandiPrice
+      tags: [mandi]
+      summary: Get mandi price for a specific crop
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Mandi price
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MandiPrice"
+        "404":
+          description: Not found
+
+  /schemes:
+    get:
+      operationId: getSchemes
+      tags: [schemes]
+      summary: List government schemes
+      parameters:
+        - name: state
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of schemes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Scheme"
+
+  /schemes/{id}:
+    get:
+      operationId: getScheme
+      tags: [schemes]
+      summary: Get a specific government scheme
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Scheme details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Scheme"
+        "404":
+          description: Not found
+
+  /equipment:
+    get:
+      operationId: getEquipment
+      tags: [equipment]
+      summary: List available equipment for rental
+      responses:
+        "200":
+          description: List of equipment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Equipment"
+
+  /equipment/{id}:
+    get:
+      operationId: getEquipmentItem
+      tags: [equipment]
+      summary: Get a specific equipment item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Equipment item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+        "404":
+          description: Not found
+
+  /expenses:
+    get:
+      operationId: getExpenses
+      tags: [expenses]
+      summary: List all expenses
+      responses:
+        "200":
+          description: List of expenses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Expense"
+    post:
+      operationId: createExpense
+      tags: [expenses]
+      summary: Create a new expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseInput"
+      responses:
+        "201":
+          description: Created expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+
+  /expenses/summary:
+    get:
+      operationId: getExpenseSummary
+      tags: [expenses]
+      summary: Get expense summary and profit/loss breakdown
+      responses:
+        "200":
+          description: Expense summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpenseSummary"
+
+  /expenses/{id}:
+    put:
+      operationId: updateExpense
+      tags: [expenses]
+      summary: Update an expense
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpenseInput"
+      responses:
+        "200":
+          description: Updated expense
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteExpense
+      tags: [expenses]
+      summary: Delete an expense
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /livestock:
+    get:
+      operationId: getLivestock
+      tags: [livestock]
+      summary: List all livestock
+      responses:
+        "200":
+          description: List of livestock
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LivestockAnimal"
+    post:
+      operationId: createLivestock
+      tags: [livestock]
+      summary: Add a livestock animal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LivestockInput"
+      responses:
+        "201":
+          description: Created livestock
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LivestockAnimal"
+
+  /livestock/{id}:
+    put:
+      operationId: updateLivestock
+      tags: [livestock]
+      summary: Update a livestock animal record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LivestockInput"
+      responses:
+        "200":
+          description: Updated livestock
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LivestockAnimal"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteLivestock
+      tags: [livestock]
+      summary: Delete a livestock animal record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /marketplace:
+    get:
+      operationId: getMarketplaceListings
+      tags: [marketplace]
+      summary: List marketplace listings
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [sell, buy]
+      responses:
+        "200":
+          description: List of listings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MarketplaceListing"
+    post:
+      operationId: createMarketplaceListing
+      tags: [marketplace]
+      summary: Create a marketplace listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketplaceListingInput"
+      responses:
+        "201":
+          description: Created listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketplaceListing"
+
+  /marketplace/{id}:
+    delete:
+      operationId: deleteMarketplaceListing
+      tags: [marketplace]
+      summary: Delete a marketplace listing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /ai/chat:
+    post:
+      operationId: aiChat
+      tags: [ai]
+      summary: Send a message to the AI farming assistant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiMessage"
+      responses:
+        "200":
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiReply"
+
+  /weather:
+    get:
+      operationId: getWeather
+      tags: [weather]
+      summary: Get 7-day weather forecast and farming suggestions
+      parameters:
+        - name: location
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Weather data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WeatherData"
+
+  /crop-advisor:
+    post:
+      operationId: getCropRecommendations
+      tags: [crop-advisor]
+      summary: Get AI-powered crop recommendations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CropAdvisorInput"
+      responses:
+        "200":
+          description: Crop recommendations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CropRecommendation"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +448,457 @@ components:
       required:
         - status
 
+    DashboardSummary:
+      type: object
+      properties:
+        totalExpenses:
+          type: number
+        totalRevenue:
+          type: number
+        profitLoss:
+          type: number
+        activeCrops:
+          type: integer
+        livestockCount:
+          type: integer
+        activeListings:
+          type: integer
+        topCropByPrice:
+          type: string
+        weatherAlert:
+          type: ["string", "null"]
+      required:
+        - totalExpenses
+        - totalRevenue
+        - profitLoss
+        - activeCrops
+        - livestockCount
+        - activeListings
+        - topCropByPrice
+        - weatherAlert
+
+    MandiPrice:
+      type: object
+      properties:
+        id:
+          type: integer
+        cropName:
+          type: string
+        currentPrice:
+          type: number
+        yesterdayPrice:
+          type: number
+        unit:
+          type: string
+        mandiName:
+          type: string
+        state:
+          type: string
+        trend:
+          type: string
+          enum: [up, down, stable]
+        updatedAt:
+          type: string
+      required:
+        - id
+        - cropName
+        - currentPrice
+        - yesterdayPrice
+        - unit
+        - mandiName
+        - state
+        - trend
+        - updatedAt
+
+    Scheme:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        eligibility:
+          type: string
+        benefit:
+          type: string
+        applicationLink:
+          type: ["string", "null"]
+        deadline:
+          type: ["string", "null"]
+        state:
+          type: string
+      required:
+        - id
+        - name
+        - description
+        - category
+        - eligibility
+        - benefit
+        - applicationLink
+        - deadline
+        - state
+
+    Equipment:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        pricePerHour:
+          type: number
+        pricePerDay:
+          type: number
+        available:
+          type: boolean
+        ownerName:
+          type: string
+        ownerPhone:
+          type: string
+        location:
+          type: string
+        imageUrl:
+          type: ["string", "null"]
+      required:
+        - id
+        - name
+        - type
+        - pricePerHour
+        - pricePerDay
+        - available
+        - ownerName
+        - ownerPhone
+        - location
+        - imageUrl
+
+    Expense:
+      type: object
+      properties:
+        id:
+          type: integer
+        category:
+          type: string
+          enum: [seed, fertilizer, labor, transport, irrigation, pesticide, other]
+        description:
+          type: string
+        amount:
+          type: number
+        cropName:
+          type: ["string", "null"]
+        date:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - category
+        - description
+        - amount
+        - cropName
+        - date
+        - createdAt
+
+    ExpenseInput:
+      type: object
+      properties:
+        category:
+          type: string
+          enum: [seed, fertilizer, labor, transport, irrigation, pesticide, other]
+        description:
+          type: string
+        amount:
+          type: number
+        cropName:
+          type: ["string", "null"]
+        date:
+          type: string
+      required:
+        - category
+        - description
+        - amount
+        - date
+
+    ExpenseSummary:
+      type: object
+      properties:
+        totalExpenses:
+          type: number
+        totalRevenue:
+          type: number
+        profitLoss:
+          type: number
+        byCategory:
+          type: array
+          items:
+            type: object
+            properties:
+              category:
+                type: string
+              total:
+                type: number
+            required:
+              - category
+              - total
+        byCrop:
+          type: array
+          items:
+            type: object
+            properties:
+              cropName:
+                type: string
+              total:
+                type: number
+            required:
+              - cropName
+              - total
+      required:
+        - totalExpenses
+        - totalRevenue
+        - profitLoss
+        - byCategory
+        - byCrop
+
+    LivestockAnimal:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum: [cow, buffalo, goat, poultry, other]
+        count:
+          type: integer
+        feedSchedule:
+          type: string
+        nextVaccination:
+          type: ["string", "null"]
+        milkPerDay:
+          type: ["number", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - type
+        - count
+        - feedSchedule
+        - nextVaccination
+        - milkPerDay
+        - notes
+        - createdAt
+
+    LivestockInput:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [cow, buffalo, goat, poultry, other]
+        count:
+          type: integer
+        feedSchedule:
+          type: string
+        nextVaccination:
+          type: ["string", "null"]
+        milkPerDay:
+          type: ["number", "null"]
+        notes:
+          type: ["string", "null"]
+      required:
+        - name
+        - type
+        - count
+        - feedSchedule
+
+    MarketplaceListing:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [sell, buy]
+        cropName:
+          type: string
+        quantity:
+          type: number
+        unit:
+          type: string
+        pricePerUnit:
+          type: number
+        farmerName:
+          type: string
+        location:
+          type: string
+        phone:
+          type: string
+        description:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - type
+        - cropName
+        - quantity
+        - unit
+        - pricePerUnit
+        - farmerName
+        - location
+        - phone
+        - description
+        - createdAt
+
+    MarketplaceListingInput:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [sell, buy]
+        cropName:
+          type: string
+        quantity:
+          type: number
+        unit:
+          type: string
+        pricePerUnit:
+          type: number
+        farmerName:
+          type: string
+        location:
+          type: string
+        phone:
+          type: string
+        description:
+          type: ["string", "null"]
+      required:
+        - type
+        - cropName
+        - quantity
+        - unit
+        - pricePerUnit
+        - farmerName
+        - location
+        - phone
+
+    AiMessage:
+      type: object
+      properties:
+        message:
+          type: string
+        language:
+          type: string
+      required:
+        - message
+
+    AiReply:
+      type: object
+      properties:
+        reply:
+          type: string
+        language:
+          type: string
+      required:
+        - reply
+        - language
+
+    WeatherData:
+      type: object
+      properties:
+        location:
+          type: string
+        currentTemp:
+          type: number
+        condition:
+          type: string
+        humidity:
+          type: number
+        windSpeed:
+          type: number
+        farmingTip:
+          type: string
+        forecast:
+          type: array
+          items:
+            $ref: "#/components/schemas/WeatherDay"
+      required:
+        - location
+        - currentTemp
+        - condition
+        - humidity
+        - windSpeed
+        - farmingTip
+        - forecast
+
+    WeatherDay:
+      type: object
+      properties:
+        date:
+          type: string
+        condition:
+          type: string
+        high:
+          type: number
+        low:
+          type: number
+        rainChance:
+          type: number
+      required:
+        - date
+        - condition
+        - high
+        - low
+        - rainChance
+
+    CropAdvisorInput:
+      type: object
+      properties:
+        soilType:
+          type: string
+        location:
+          type: string
+        season:
+          type: string
+        waterAvailability:
+          type: string
+      required:
+        - soilType
+        - location
+        - season
+        - waterAvailability
+
+    CropRecommendation:
+      type: object
+      properties:
+        cropName:
+          type: string
+        profitEstimate:
+          type: number
+        riskLevel:
+          type: string
+          enum: [low, medium, high]
+        marketDemand:
+          type: string
+          enum: [low, medium, high]
+        duration:
+          type: string
+        reason:
+          type: string
+      required:
+        - cropName
+        - profitEstimate
+        - riskLevel
+        - marketDemand
+        - duration
+        - reason
