@@ -1,16 +1,18 @@
 import { useGetExpenses, getGetExpensesQueryKey, useGetExpenseSummary, getGetExpenseSummaryQueryKey } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { IndianRupee, TrendingUp, TrendingDown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/language-context";
 
 const COLORS = ['#1B5E20', '#4CAF50', '#81C784', '#FF9800', '#FFB74D', '#A1887F', '#795548'];
 
 export default function Expenses() {
   const { data: expenses, isLoading: expensesLoading } = useGetExpenses({ query: { queryKey: getGetExpensesQueryKey() } });
   const { data: summary, isLoading: summaryLoading } = useGetExpenseSummary({ query: { queryKey: getGetExpenseSummaryQueryKey() } });
+  const { t } = useLanguage();
 
   const chartData = summary?.byCategory.map(item => ({
     name: item.category,
@@ -21,10 +23,10 @@ export default function Expenses() {
     <div className="p-4 space-y-6">
       <header className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-primary mb-1">Expenses</h1>
-          <p className="text-sm text-muted-foreground">Track your farm's finances.</p>
+          <h1 className="text-2xl font-bold text-primary mb-1">{t.expenses.title}</h1>
+          <p className="text-sm text-muted-foreground">{t.expenses.subtitle}</p>
         </div>
-        <Button size="icon" className="rounded-full shadow-md w-10 h-10">
+        <Button size="icon" className="rounded-full shadow-md w-10 h-10" data-testid="btn-add-expense">
           <Plus className="w-5 h-5" />
         </Button>
       </header>
@@ -33,10 +35,10 @@ export default function Expenses() {
         <Skeleton className="h-32 w-full rounded-xl" />
       ) : summary ? (
         <div className="grid grid-cols-2 gap-4">
-           <Card className="bg-primary text-primary-foreground border-none">
+          <Card className="bg-primary text-primary-foreground border-none">
             <CardContent className="p-4">
               <div className="text-sm font-medium flex items-center gap-1 opacity-90 mb-1">
-                <TrendingUp className="w-4 h-4" /> Revenue
+                <TrendingUp className="w-4 h-4" /> {t.expenses.revenue}
               </div>
               <div className="text-xl font-bold">₹{summary.totalRevenue.toLocaleString()}</div>
             </CardContent>
@@ -44,7 +46,7 @@ export default function Expenses() {
           <Card className="bg-card">
             <CardContent className="p-4">
               <div className="text-sm font-medium flex items-center gap-1 text-muted-foreground mb-1">
-                <TrendingDown className="w-4 h-4 text-destructive" /> Expenses
+                <TrendingDown className="w-4 h-4 text-destructive" /> {t.expenses.expenses}
               </div>
               <div className="text-xl font-bold text-destructive">₹{summary.totalExpenses.toLocaleString()}</div>
             </CardContent>
@@ -54,7 +56,7 @@ export default function Expenses() {
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg">Category Breakdown</CardTitle>
+          <CardTitle className="text-lg">{t.expenses.categoryBreakdown}</CardTitle>
         </CardHeader>
         <CardContent>
           {summaryLoading ? (
@@ -70,7 +72,7 @@ export default function Expenses() {
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {chartData.map((entry, index) => (
+                    {chartData.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -80,21 +82,21 @@ export default function Expenses() {
             </div>
           ) : (
             <div className="h-48 flex items-center justify-center text-muted-foreground">
-              No data available
+              {t.expenses.noData}
             </div>
           )}
         </CardContent>
       </Card>
 
       <div className="space-y-4">
-        <h2 className="text-lg font-bold">Recent Transactions</h2>
+        <h2 className="text-lg font-bold">{t.expenses.recentTransactions}</h2>
         {expensesLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-16 w-full rounded-xl" />
           ))
         ) : expenses?.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            No expenses recorded yet.
+            {t.expenses.noExpenses}
           </div>
         ) : (
           expenses?.map((expense, i) => (
@@ -104,7 +106,7 @@ export default function Expenses() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.05 }}
             >
-              <div className="flex items-center justify-between p-3 bg-card border rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-card border rounded-xl" data-testid={`row-expense-${expense.id}`}>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                     <IndianRupee className="w-5 h-5" />

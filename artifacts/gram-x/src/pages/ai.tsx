@@ -6,23 +6,19 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bot, User, Send, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/contexts/language-context";
 
 type Message = { role: "user" | "ai"; text: string };
 
-const QUICK_PROMPTS = [
-  "Best crop for monsoon in UP?",
-  "Pest control for rice",
-  "PM Kisan scheme details",
-  "Wheat price near me"
-];
-
 export default function AiChat() {
+  const { t, language } = useLanguage();
+
   const [messages, setMessages] = useState<Message[]>([
-    { role: "ai", text: "Namaste! I am your Gram_X assistant. Ask me anything about farming, weather, schemes, or crop advice." }
+    { role: "ai", text: t.ai.greeting }
   ]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  
+
   const chatMutation = useAiChat();
 
   useEffect(() => {
@@ -31,6 +27,10 @@ export default function AiChat() {
     }
   }, [messages]);
 
+  useEffect(() => {
+    setMessages([{ role: "ai", text: t.ai.greeting }]);
+  }, [language]);
+
   const handleSend = (text: string) => {
     if (!text.trim() || chatMutation.isPending) return;
 
@@ -38,15 +38,17 @@ export default function AiChat() {
     setMessages(prev => [...prev, { role: "user", text: userMsg }]);
     setInput("");
 
-    chatMutation.mutate({ data: { message: userMsg, language: "en" } }, {
+    chatMutation.mutate({ data: { message: userMsg, language } }, {
       onSuccess: (data) => {
         setMessages(prev => [...prev, { role: "ai", text: data.reply }]);
       },
       onError: () => {
-        setMessages(prev => [...prev, { role: "ai", text: "Sorry, I had trouble processing that. Please try again." }]);
+        setMessages(prev => [...prev, { role: "ai", text: t.ai.error }]);
       }
     });
   };
+
+  const quickPrompts = [t.ai.prompt1, t.ai.prompt2, t.ai.prompt3, t.ai.prompt4];
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] bg-muted/20 relative">
@@ -55,8 +57,8 @@ export default function AiChat() {
           <Bot className="w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-primary leading-tight">Gram_X Assistant</h1>
-          <p className="text-xs text-muted-foreground">Always ready to help</p>
+          <h1 className="text-lg font-bold text-primary leading-tight">{t.ai.title}</h1>
+          <p className="text-xs text-muted-foreground">{t.ai.subtitle}</p>
         </div>
       </header>
 
@@ -79,33 +81,34 @@ export default function AiChat() {
               </motion.div>
             ))}
           </AnimatePresence>
-          
+
           {chatMutation.isPending && (
-             <motion.div
-             initial={{ opacity: 0 }}
-             animate={{ opacity: 1 }}
-             className="flex gap-3 max-w-[85%]"
-           >
-             <div className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center shrink-0">
-               <Bot className="w-4 h-4" />
-             </div>
-             <div className="p-4 rounded-2xl bg-card border shadow-sm rounded-tl-sm flex gap-1">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex gap-3 max-w-[85%]"
+            >
+              <div className="w-8 h-8 rounded-full bg-accent/20 text-accent flex items-center justify-center shrink-0">
+                <Bot className="w-4 h-4" />
+              </div>
+              <div className="p-4 rounded-2xl bg-card border shadow-sm rounded-tl-sm flex gap-1">
                 <span className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce"></span>
                 <span className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
                 <span className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></span>
-             </div>
-           </motion.div>
+              </div>
+            </motion.div>
           )}
         </div>
       </ScrollArea>
 
       <div className="p-4 bg-background border-t space-y-3">
         {messages.length < 3 && (
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide no-scrollbar">
-            {QUICK_PROMPTS.map(prompt => (
+          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            {quickPrompts.map(prompt => (
               <button
                 key={prompt}
                 onClick={() => handleSend(prompt)}
+                data-testid={`btn-quick-prompt`}
                 className="whitespace-nowrap px-3 py-1.5 bg-muted hover:bg-muted/80 text-xs rounded-full flex items-center gap-1.5 transition-colors border text-foreground"
               >
                 <Sparkles className="w-3 h-3 text-accent" />
@@ -114,18 +117,19 @@ export default function AiChat() {
             ))}
           </div>
         )}
-        <form 
+        <form
           onSubmit={(e) => { e.preventDefault(); handleSend(input); }}
           className="flex gap-2"
         >
-          <Input 
+          <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your question..." 
+            placeholder={t.ai.typeQuestion}
             className="rounded-full bg-muted/50 border-transparent focus-visible:ring-primary focus-visible:bg-background"
             disabled={chatMutation.isPending}
+            data-testid="input-ai-message"
           />
-          <Button type="submit" size="icon" className="rounded-full shrink-0" disabled={!input.trim() || chatMutation.isPending}>
+          <Button type="submit" size="icon" className="rounded-full shrink-0" disabled={!input.trim() || chatMutation.isPending} data-testid="btn-ai-send">
             <Send className="w-4 h-4" />
           </Button>
         </form>
