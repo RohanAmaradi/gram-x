@@ -37,7 +37,14 @@ router.post("/marketplace", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  const [listing] = await db.insert(marketplaceTable).values(parsed.data).returning();
+  const [listing] = await db
+    .insert(marketplaceTable)
+    .values({
+      ...parsed.data,
+      quantity: String(parsed.data.quantity),
+      pricePerUnit: String(parsed.data.pricePerUnit),
+    })
+    .returning();
   res.status(201).json(formatListing(listing));
 });
 

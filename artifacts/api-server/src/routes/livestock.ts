@@ -31,7 +31,13 @@ router.post("/livestock", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  const [animal] = await db.insert(livestockTable).values(parsed.data).returning();
+  const [animal] = await db
+    .insert(livestockTable)
+    .values({
+      ...parsed.data,
+      milkPerDay: parsed.data.milkPerDay != null ? String(parsed.data.milkPerDay) : null,
+    })
+    .returning();
   res.status(201).json(formatAnimal(animal));
 });
 
@@ -49,7 +55,12 @@ router.put("/livestock/:id", async (req, res): Promise<void> => {
   }
   const [animal] = await db
     .update(livestockTable)
-    .set(parsed.data)
+    .set({
+      ...parsed.data,
+      milkPerDay: parsed.data.milkPerDay !== undefined
+        ? (parsed.data.milkPerDay !== null ? String(parsed.data.milkPerDay) : null)
+        : undefined,
+    })
     .where(eq(livestockTable.id, params.data.id))
     .returning();
   if (!animal) {

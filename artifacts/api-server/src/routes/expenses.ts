@@ -68,7 +68,10 @@ router.post("/expenses", async (req, res): Promise<void> => {
   }
   const [expense] = await db
     .insert(expensesTable)
-    .values(parsed.data)
+    .values({
+      ...parsed.data,
+      amount: String(parsed.data.amount),
+    })
     .returning();
   res.status(201).json(formatExpense(expense));
 });
@@ -87,7 +90,10 @@ router.put("/expenses/:id", async (req, res): Promise<void> => {
   }
   const [expense] = await db
     .update(expensesTable)
-    .set(parsed.data)
+    .set({
+      ...parsed.data,
+      amount: parsed.data.amount !== undefined ? String(parsed.data.amount) : undefined,
+    })
     .where(eq(expensesTable.id, params.data.id))
     .returning();
   if (!expense) {
